@@ -1,30 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Screen Recorder</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Universal Recorder — Filters</title>
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="app-container">
-    <video autoplay muted></video>
+    <video autoplay muted playsinline></video>
 
     <div class="controls">
-      <div class="status">
-        <span class="dot"></span>
-        <span class="status-text">Requesting access...</span>
-      </div>
+      <div class="status"><span class="dot"></span><span class="status-text">Initializing...</span></div>
 
       <div class="buttons">
-        <button class="btn record"><i></i> Record</button>
-        <button class="btn capture"><i></i> Capture</button>
-        <button class="btn mic-toggle"><i></i> Mic On</button>
+        <button class="btn record">⏺ Record</button>
+        <button class="btn capture">Capture</button>
+        <button class="btn switch">Switch Cam</button>
+        <button class="btn mic-toggle">Mic On</button>
       </div>
 
       <div class="timer-cont">
         <div class="timer">00:00:00</div>
         <div class="progress-bar"><div class="progress"></div></div>
+      </div>
+
+      <!-- Filter panel -->
+      <div class="filter-panel">
+        <div class="presets">
+          <button class="preset" data-filter="none">None</button>
+          <button class="preset" data-filter="warm">Warm</button>
+          <button class="preset" data-filter="cool">Cool</button>
+          <button class="preset" data-filter="mono">Mono</button>
+          <button class="preset" data-filter="vivid">Vivid</button>
+        </div>
+
+        <div class="sliders">
+          <label>Hue <input type="range" id="hue" min="0" max="360" value="0"></label>
+          <label>Saturate <input type="range" id="saturate" min="0" max="300" value="100"></label>
+          <label>Brightness <input type="range" id="brightness" min="0" max="300" value="100"></label>
+          <label>Contrast <input type="range" id="contrast" min="0" max="300" value="100"></label>
+          <label>Grayscale <input type="range" id="grayscale" min="0" max="100" value="0"></label>
+          <label>Sepia <input type="range" id="sepia" min="0" max="100" value="0"></label>
+          <label>Blur <input type="range" id="blur" step="0.5" min="0" max="10" value="0"></label>
+        </div>
       </div>
     </div>
   </div>
