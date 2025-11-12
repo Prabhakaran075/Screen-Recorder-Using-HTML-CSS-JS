@@ -3,22 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smart Screen Recorder</title>
+  <title>Universal Recorder</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="app-container">
-    <video autoplay muted></video>
+    <video autoplay muted playsinline></video>
 
     <div class="controls">
       <div class="status">
         <span class="dot"></span>
-        <span class="status-text">Requesting access...</span>
+        <span class="status-text">Initializing...</span>
       </div>
 
       <div class="buttons">
         <button class="btn record"><i>⏺</i> Record</button>
         <button class="btn capture"><i>📸</i> Capture</button>
+        <button class="btn switch"><i>🔄</i> Switch Cam</button>
         <button class="btn mic-toggle"><i>🎤</i> Mic On</button>
       </div>
 
