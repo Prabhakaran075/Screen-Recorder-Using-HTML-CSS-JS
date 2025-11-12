@@ -14,36 +14,50 @@ let audioEnabled = true;
 let isRecording = false;
 let timer, counter = 0;
 
-// Get screen + mic stream
+// 🔥 Auto request when page loads
+window.addEventListener("load", async () => {
+  await initStream();
+});
+
+// 🧩 Request screen + mic stream automatically
 async function initStream() {
   try {
+    updateStatus("Requesting access...", false);
     const screenStream = await navigator.mediaDevices.getDisplayMedia({
-      video: true,
-      audio: audioEnabled
+      video: { frameRate: 30 },
+      audio: true,
     });
 
-    // Combine mic audio with screen if mic enabled
+    let finalStream = screenStream;
+
+    // Add mic audio track
     if (audioEnabled) {
-      const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const combined = new MediaStream([
-        ...screenStream.getTracks(),
-        ...audioStream.getTracks()
-      ]);
-      stream = combined;
-    } else {
-      stream = screenStream;
+      try {
+        const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        finalStream = new MediaStream([
+          ...screenStream.getTracks(),
+          ...micStream.getTracks(),
+        ]);
+      } catch (micError) {
+        console.warn("Microphone permission denied:", micError);
+      }
     }
 
+    stream = finalStream;
     video.srcObject = stream;
+    updateStatus("Ready to record", false);
   } catch (err) {
-    alert("Screen sharing permission denied.");
+    updateStatus("Access denied. Please allow screen recording.", false);
+    alert("Permission denied. Please allow screen recording.");
   }
 }
 
-// Start or stop recording
+// 🎥 Record
 recordBtn.addEventListener("click", async () => {
+  if (!stream) await initStream();
+  if (!stream) return alert("Cannot access stream!");
+
   if (!isRecording) {
-    await initStream();
     recorder = new MediaRecorder(stream);
     chunks = [];
 
@@ -59,20 +73,19 @@ recordBtn.addEventListener("click", async () => {
 
     recorder.start();
     isRecording = true;
-    updateStatus("Recording...", true);
     recordBtn.classList.add("active");
+    updateStatus("Recording...", true);
     startTimer();
   } else {
     recorder.stop();
-    stopTimer();
     isRecording = false;
-    updateStatus("Idle", false);
+    stopTimer();
+    updateStatus("Stopped", false);
     recordBtn.classList.remove("active");
-    stream.getTracks().forEach(track => track.stop());
   }
 });
 
-// Capture Screenshot
+// 📸 Capture Screenshot
 captureBtn.addEventListener("click", () => {
   if (!video.srcObject) return alert("Start screen sharing first!");
   const canvas = document.createElement("canvas");
@@ -88,14 +101,17 @@ captureBtn.addEventListener("click", () => {
   a.click();
 });
 
-// Toggle Microphone
-micToggleBtn.addEventListener("click", () => {
+// 🎤 Toggle Mic
+micToggleBtn.addEventListener("click", async () => {
   audioEnabled = !audioEnabled;
   micToggleBtn.classList.toggle("off", !audioEnabled);
   micToggleBtn.textContent = audioEnabled ? "🎤 Mic On" : "🔇 Mic Off";
+
+  // Refresh stream immediately
+  await initStream();
 });
 
-// Timer & Progress
+// ⏱ Timer
 function startTimer() {
   counter = 0;
   progressBar.style.width = "0%";
@@ -117,9 +133,9 @@ function formatTime(seconds) {
   const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, "0");
   const secs = String(seconds % 60).padStart(2, "0");
   return `${hrs}:${mins}:${secs}`;
-} 
+}
 
-// UI Updates
+// 🧭 UI Status
 function updateStatus(text, active) {
   statusText.textContent = text;
   status.classList.toggle("active", active);
