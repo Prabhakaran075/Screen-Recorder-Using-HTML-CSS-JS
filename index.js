@@ -14,12 +14,12 @@ let audioEnabled = true;
 let isRecording = false;
 let timer, counter = 0;
 
-// 🔥 Auto request when page loads
+// Auto request when page loads
 window.addEventListener("load", async () => {
   await initStream();
 });
 
-// 🧩 Request screen + mic stream automatically
+// Request screen + mic stream automatically
 async function initStream() {
   try {
     updateStatus("Requesting access...", false);
@@ -52,7 +52,7 @@ async function initStream() {
   }
 }
 
-// 🎥 Record
+// Record
 recordBtn.addEventListener("click", async () => {
   if (!stream) await initStream();
   if (!stream) return alert("Cannot access stream!");
@@ -85,7 +85,7 @@ recordBtn.addEventListener("click", async () => {
   }
 });
 
-// 📸 Capture Screenshot
+// Capture Screenshot
 captureBtn.addEventListener("click", () => {
   if (!video.srcObject) return alert("Start screen sharing first!");
   const canvas = document.createElement("canvas");
@@ -101,17 +101,17 @@ captureBtn.addEventListener("click", () => {
   a.click();
 });
 
-// 🎤 Toggle Mic
+// Toggle Mic
 micToggleBtn.addEventListener("click", async () => {
   audioEnabled = !audioEnabled;
   micToggleBtn.classList.toggle("off", !audioEnabled);
-  micToggleBtn.textContent = audioEnabled ? "🎤 Mic On" : "🔇 Mic Off";
+  micToggleBtn.textContent = audioEnabled ? "Mic On" : "Mic Off";
 
   // Refresh stream immediately
   await initStream();
 });
 
-// ⏱ Timer
+// Timer
 function startTimer() {
   counter = 0;
   progressBar.style.width = "0%";
@@ -135,7 +135,7 @@ function formatTime(seconds) {
   return `${hrs}:${mins}:${secs}`;
 }
 
-// 🧭 UI Status
+// UI Status
 function updateStatus(text, active) {
   statusText.textContent = text;
   status.classList.toggle("active", active);
